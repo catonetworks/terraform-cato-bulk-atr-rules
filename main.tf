@@ -92,6 +92,16 @@ locals {
   }
 }
 
+# Fails plan on 0 rules (e.g. truncated/wrong-tenant export) unless overridden.
+resource "terraform_data" "guard_empty_policy" {
+  lifecycle {
+    precondition {
+      condition     = var.allow_empty_policy || length(local.rules_data_raw) > 0
+      error_message = "Policy JSON contains 0 rules. If intentional (greenfield/teardown), set allow_empty_policy = true. A truncated or wrong-tenant export would otherwise destroy the entire live policy."
+    }
+  }
+}
+
 resource "cato_app_tenant_restriction_section" "sections" {
   for_each = local.sections_data
   at = {
