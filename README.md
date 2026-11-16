@@ -1,5 +1,12 @@
 # Terraform Cato Bulk App Tenant Restriction Rules Module
 
+> [!IMPORTANT]
+> **Early access (beta).** This module targets the Cato Terraform provider
+> `2.0.0-prerelease.1`, an **early-access / beta** release. A general-availability
+> (GA) release is planned shortly, following the current evaluation period.
+> Until GA ships, pin the exact prerelease version.
+
+
 This module allows you to bulk import App Tenant Restriction (ATR) rules and sections from a JSON configuration file, and define the order of those rules and sections within the Cato policy.
 
 ## Usage
@@ -156,6 +163,7 @@ output; their order is creation order only.
 ### Parameters
 
 - `atr_rules_json_file_path`: Path to your JSON configuration file (`data.policy.appTenantRestriction.policy` root)
+- `policy_enabled`: (Optional, default `null`) Account-level policy toggle. `null` leaves it unmanaged (resource not created); `true`/`false` manages it via `cato_app_tenant_restriction_policy`.
 - `allow_empty_policy`: (Optional) Safety guard — fail planning when the policy JSON contains 0 rules unless explicitly allowed. Default `false`.
 
 ## Working with Existing Rules (Brownfield Deployments)
@@ -409,13 +417,13 @@ These example outputs demonstrate various practical applications:
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
-| <a name="requirement_cato"></a> [cato](#requirement\_cato) | >= 1.3.1 |
+| <a name="requirement_cato"></a> [cato](#requirement\_cato) | >= 2.0.0-prerelease.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_cato"></a> [cato](#provider\_cato) | >= 1.3.1 |
+| <a name="provider_cato"></a> [cato](#provider\_cato) | >= 2.0.0-prerelease.1 |
 
 ## Modules
 
@@ -434,6 +442,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_allow_empty_policy"></a> [allow\_empty\_policy](#input\_allow\_empty\_policy) | Safety guard: fail planning when the policy JSON contains 0 rules unless explicitly allowed. Protects against a truncated or wrong-tenant export destroying the live policy. Set true only for intentional greenfield/teardown. | `bool` | `false` | no |
+| <a name="input_policy_enabled"></a> [policy\_enabled](#input\_policy\_enabled) | Manage the account-level App Tenant Restriction policy toggle. null leaves the toggle unmanaged; true/false manages it via cato\_app\_tenant\_restriction\_policy. | `bool` | `null` | no |
 | <a name="input_atr_rules_json_file_path"></a> [atr\_rules\_json\_file\_path](#input\_atr\_rules\_json\_file\_path) | Path to the App Tenant Restriction JSON export produced by `catocli export atr_rules` (data.policy.appTenantRestriction.policy root). | `string` | n/a | yes |
 
 ## Outputs
